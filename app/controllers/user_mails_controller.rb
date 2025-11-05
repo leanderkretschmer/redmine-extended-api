@@ -61,17 +61,25 @@ class UserMailsController < ApplicationController
     
     if @email_address.update(email_address_params)
       # Lade das Objekt neu, um sicherzustellen, dass alle Änderungen korrekt sind
-      @email_address.reload
+      begin
+        @email_address.reload
+      rescue => e
+        # Falls reload fehlschlägt, ignorieren und fortfahren
+      end
       
       respond_to do |format|
         format.json {
-          render :json => email_address_to_hash(@email_address)
+          render :json => {
+            :success => true,
+            :message => 'E-Mail-Adresse erfolgreich aktualisiert',
+            :email_address => email_address_to_hash(@email_address)
+          }, :status => :ok
         }
       end
     else
       respond_to do |format|
         format.json {
-          render :json => {:errors => @email_address.errors.full_messages}, :status => :unprocessable_entity
+          render :json => {:success => false, :errors => @email_address.errors.full_messages}, :status => :unprocessable_entity
         }
       end
     end
