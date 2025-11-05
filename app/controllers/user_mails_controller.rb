@@ -95,13 +95,12 @@ class UserMailsController < ApplicationController
   end
 
   def search
-    email_address = request.headers['X-Search-Email'] || request.headers['X-Email-Address'] || request.headers['X-Email']
-    email_address ||= params[:email] || params[:address]
+    email_address = params[:email] || params[:address]
     
     unless email_address.present?
       respond_to do |format|
         format.json {
-          render :json => {:error => 'E-Mail-Adresse fehlt. Bitte verwende Header X-Search-Email oder X-Email-Address'}, :status => :bad_request
+          render :json => {:error => 'E-Mail-Adresse fehlt. Bitte verwende Query-Parameter email= oder address='}, :status => :bad_request
         }
       end
       return
@@ -112,7 +111,7 @@ class UserMailsController < ApplicationController
     respond_to do |format|
       format.json {
         if email_record
-          render :json => {:exists => true, :user_id => email_record.user_id}
+          render :json => email_address_to_hash(email_record)
         else
           render :json => {:exists => false}
         end
