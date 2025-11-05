@@ -1,7 +1,7 @@
 require 'redmine'
 
 Redmine::Plugin.register :redmine_mailer_api do
-  name 'Redmine User Mails API'
+  name 'Extended API'
   author 'Leander Kretschmer'
   description 'Erweitert die Redmine API um die Möglichkeit, mehrere E-Mails pro User zu verwalten'
   version '0.0.4'

@@ -1,4 +1,4 @@
-# Redmine User Mails API Plugin
+# Extended API Plugin
 
 Ein Redmine 6 Plugin, das die API um die Verwaltung mehrerer E-Mail-Adressen pro User erweitert.
 
