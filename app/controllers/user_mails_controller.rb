@@ -60,27 +60,38 @@ class UserMailsController < ApplicationController
         @user.email_addresses.where(:is_default => true).where.not(:id => @email_address.id).update_all(:is_default => false)
       end
       
-      update_params = email_address_params || {}
+      # Setze Attribute direkt aus params
+      update_hash = {}
       
-      if @email_address.update(update_params)
-        # Lade das Objekt neu aus der Datenbank, um sicherzustellen, dass alle Änderungen korrekt sind
+      if params[:address].present?
+        update_hash[:address] = params[:address]
+      end
+      
+      if params[:is_default].present?
+        is_default_value = params[:is_default]
+        # Konvertiere zu Boolean
+        if is_default_value == true || is_default_value == 'true' || is_default_value == 1 || is_default_value == '1'
+          update_hash[:is_default] = true
+        elsif is_default_value == false || is_default_value == 'false' || is_default_value == 0 || is_default_value == '0'
+          update_hash[:is_default] = false
+        end
+      end
+      
+      # Verwende update_columns um Callbacks zu umgehen
+      if update_hash.any?
+        @email_address.update_columns(update_hash)
+        # Lade das Objekt neu aus der Datenbank
         @email_address = @user.email_addresses.find(params[:id])
-        
-        respond_to do |format|
-          format.json {
-            render :json => {
-              :success => true,
-              :message => 'E-Mail-Adresse erfolgreich aktualisiert',
-              :email_address => email_address_to_hash(@email_address)
-            }, :status => :ok
-          }
-        end
-      else
-        respond_to do |format|
-          format.json {
-            render :json => {:success => false, :errors => @email_address.errors.full_messages}, :status => :unprocessable_entity
-          }
-        end
+      end
+      
+      respond_to do |format|
+        format.json {
+          render :json => {
+            :success => true,
+            :message => 'E-Mail-Adresse erfolgreich aktualisiert',
+            :email_address => email_address_to_hash(@email_address)
+          }, :status => :ok
+        }
       end
     rescue => e
       Rails.logger.error "Error in UserMailsController#update: #{e.message}\n#{e.backtrace.join("\n")}"
