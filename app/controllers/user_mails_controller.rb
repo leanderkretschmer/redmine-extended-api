@@ -60,7 +60,7 @@ class UserMailsController < ApplicationController
         @user.email_addresses.where(:is_default => true).where.not(:id => @email_address.id).update_all(:is_default => false)
       end
       
-      update_params = email_address_params
+      update_params = email_address_params || {}
       
       if @email_address.update(update_params)
         # Lade das Objekt neu aus der Datenbank, um sicherzustellen, dass alle Änderungen korrekt sind
@@ -162,6 +162,9 @@ class UserMailsController < ApplicationController
 
   def email_address_params
     permitted = params.permit(:address, :is_default)
+    
+    # Stelle sicher, dass immer ein Hash zurückgegeben wird
+    permitted = {} if permitted.nil?
     
     # Konvertiere is_default zu Boolean, falls es als String kommt
     if permitted[:is_default].present?
