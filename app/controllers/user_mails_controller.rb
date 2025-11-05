@@ -161,10 +161,14 @@ class UserMailsController < ApplicationController
   end
 
   def email_address_params
-    permitted = params.permit(:address, :is_default)
+    # Verwende to_unsafe_h für direkten Zugriff auf Parameter
+    raw_params = params.to_unsafe_h
     
-    # Stelle sicher, dass immer ein Hash zurückgegeben wird
-    permitted = {} if permitted.nil?
+    permitted = {}
+    
+    # Kopiere nur erlaubte Parameter
+    permitted[:address] = raw_params[:address] if raw_params.has_key?(:address)
+    permitted[:is_default] = raw_params[:is_default] if raw_params.has_key?(:is_default)
     
     # Konvertiere is_default zu Boolean, falls es als String kommt
     if permitted[:is_default].present?
