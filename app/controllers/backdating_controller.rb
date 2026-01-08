@@ -1,9 +1,24 @@
 class BackdatingController < ApplicationController
-  accept_api_auth :backdate_issue, :backdate_journal
+  accept_api_auth :backdate_issue, :backdate_journal, :list_journals
 
   before_action :find_issue
   before_action :find_journal, :only => [:backdate_journal]
   before_action :authorize_global
+
+  # GET /issues/:issue_id/journals_list.json
+  # Listet alle Journals (Kommentare) eines Tickets auf
+  def list_journals
+    journals = @issue.journals.includes(:user).order(:created_on)
+
+    respond_to do |format|
+      format.json {
+        render :json => {
+          :issue_id => @issue.id,
+          :journals => journals.map { |j| journal_to_hash(j) }
+        }
+      }
+    end
+  end
 
   # PUT /issues/:issue_id/backdate.json
   # Setzt created_on und/oder updated_on eines Tickets auf ein bestimmtes Datum
@@ -156,6 +171,24 @@ class BackdatingController < ApplicationController
         nil
       end
     end
+  end
+
+  def journal_to_hash(journal)
+    hash = {
+      :id => journal.id,
+      :notes => journal.notes.to_s,
+      :created_on => journal.created_on,
+      :private_notes => journal.private_notes
+    }
+
+    if journal.user
+      hash[:user] = {
+        :id => journal.user.id,
+        :name => journal.user.name
+      }
+    end
+
+    hash
   end
 end
 

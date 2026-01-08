@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   match 'issues/:issue_id/assigned_contact(.:format)', :to => 'assigned_contacts#show', :via => [:get], :as => 'issue_assigned_contact'
   match 'issues/:issue_id/assigned_contact(.:format)', :to => 'assigned_contacts#update', :via => [:put, :post]
   match 'issues/:issue_id/backdate(.:format)', :to => 'backdating#backdate_issue', :via => [:put], :as => 'backdate_issue'
+  match 'issues/:issue_id/journals_list(.:format)', :to => 'backdating#list_journals', :via => [:get], :as => 'list_journals'
   match 'issues/:issue_id/journals/:journal_id/backdate(.:format)', :to => 'backdating#backdate_journal', :via => [:put], :as => 'backdate_journal'
 end

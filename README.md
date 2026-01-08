@@ -10,6 +10,7 @@ Ein Redmine 6 Plugin, das die API um die Verwaltung mehrerer E-Mail-Adressen pro
 - **Kontakt-Zuweisung zu Tickets**: Abfrage des zugewiesenen Kontakts zu einem Ticket
 - **Rückdatierung von Tickets**: Erstellungs- und Änderungsdatum eines Tickets nachträglich anpassen
 - **Rückdatierung von Kommentaren**: Erstellungsdatum von Journal Entries (Kommentaren) nachträglich anpassen
+- **Journals auflisten**: Alle Kommentare/Änderungen eines Tickets mit ihren IDs abrufen
 
 ## Installation
 
@@ -248,6 +249,51 @@ curl -X PUT \
   "error": "Ungültiges Datumsformat für created_on. Verwende ISO 8601 Format (z.B. 2024-01-15T10:30:00Z)"
 }
 ```
+
+### Journals (Kommentare) eines Tickets auflisten
+
+```
+GET /issues/:issue_id/journals_list.json
+```
+
+Mit diesem Endpoint können alle Journals (Kommentare/Änderungen) eines Tickets abgefragt werden, um die Journal-IDs zu erhalten.
+
+**Beispiel:**
+```bash
+curl -H "X-Redmine-API-Key: YOUR_API_KEY" \
+  https://your-redmine-instance.com/issues/1234/journals_list.json
+```
+
+**Antwort:**
+```json
+{
+  "issue_id": 1234,
+  "journals": [
+    {
+      "id": 98765,
+      "notes": "Das ist ein Kommentar",
+      "created_on": "2024-01-15T10:30:00Z",
+      "private_notes": false,
+      "user": {
+        "id": 5,
+        "name": "Max Muster"
+      }
+    },
+    {
+      "id": 98766,
+      "notes": "",
+      "created_on": "2024-01-16T14:00:00Z",
+      "private_notes": false,
+      "user": {
+        "id": 5,
+        "name": "Max Muster"
+      }
+    }
+  ]
+}
+```
+
+**Hinweis:** Journals mit leerem `notes`-Feld sind Statusänderungen ohne Kommentartext.
 
 ### Kommentar (Journal Entry) rückdatieren
 
