@@ -8,6 +8,8 @@ Ein Redmine 6 Plugin, das die API um die Verwaltung mehrerer E-Mail-Adressen pro
 - **Mehrere E-Mails pro User**: Unterstützung für zusätzliche E-Mail-Adressen neben der Standard-E-Mail
 - **RESTful API**: Saubere REST-API-Endpunkte im JSON-Format
 - **Kontakt-Zuweisung zu Tickets**: Abfrage des zugewiesenen Kontakts zu einem Ticket
+- **Rückdatierung von Tickets**: Erstellungs- und Änderungsdatum eines Tickets nachträglich anpassen
+- **Rückdatierung von Kommentaren**: Erstellungsdatum von Journal Entries (Kommentaren) nachträglich anpassen
 
 ## Installation
 
@@ -204,6 +206,90 @@ curl -X PUT \
   "issue_id": 1234,
   "contact_id": 987,
   "contact_name": "Max Muster"
+}
+```
+
+### Ticket rückdatieren
+
+```
+PUT /issues/:issue_id/backdate.json
+```
+
+Mit diesem Endpoint kann das Erstellungsdatum (`created_on`) und/oder das Änderungsdatum (`updated_on`) eines Tickets geändert werden.
+
+**Parameter:**
+- `created_on` (optional): Das neue Erstellungsdatum im ISO 8601 Format (z.B. `2024-01-15T10:30:00Z`)
+- `updated_on` (optional): Das neue Änderungsdatum im ISO 8601 Format (z.B. `2024-01-15T10:30:00Z`)
+
+Mindestens einer der beiden Parameter muss angegeben werden.
+
+**Beispiel:**
+```bash
+curl -X PUT \
+  -H "X-Redmine-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"created_on": "2024-01-15T10:30:00Z", "updated_on": "2024-01-16T14:00:00Z"}' \
+  https://your-redmine-instance.com/issues/1234/backdate.json
+```
+
+**Erfolgsantwort:**
+```json
+{
+  "success": true,
+  "issue_id": 1234,
+  "created_on": "2024-01-15T10:30:00Z",
+  "updated_on": "2024-01-16T14:00:00Z"
+}
+```
+
+**Fehlerantwort bei ungültigem Datum:**
+```json
+{
+  "error": "Ungültiges Datumsformat für created_on. Verwende ISO 8601 Format (z.B. 2024-01-15T10:30:00Z)"
+}
+```
+
+### Kommentar (Journal Entry) rückdatieren
+
+```
+PUT /issues/:issue_id/journals/:journal_id/backdate.json
+```
+
+Mit diesem Endpoint kann das Erstellungsdatum (`created_on`) eines Kommentars (Journal Entry) unter einem Ticket geändert werden.
+
+**Parameter:**
+- `created_on` (required): Das neue Erstellungsdatum im ISO 8601 Format (z.B. `2024-01-15T10:30:00Z`)
+
+**Beispiel:**
+```bash
+curl -X PUT \
+  -H "X-Redmine-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"created_on": "2024-01-15T10:30:00Z"}' \
+  https://your-redmine-instance.com/issues/1234/journals/5678/backdate.json
+```
+
+**Erfolgsantwort:**
+```json
+{
+  "success": true,
+  "issue_id": 1234,
+  "journal_id": 5678,
+  "created_on": "2024-01-15T10:30:00Z"
+}
+```
+
+**Fehlerantwort bei nicht gefundenem Kommentar:**
+```json
+{
+  "error": "Kommentar nicht gefunden"
+}
+```
+
+**Fehlerantwort bei ungültigem Datum:**
+```json
+{
+  "error": "Ungültiges Datumsformat für created_on. Verwende ISO 8601 Format (z.B. 2024-01-15T10:30:00Z)"
 }
 ```
 
