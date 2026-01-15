@@ -25,7 +25,7 @@
             <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
           <% end %>
         </td>
-        <td><code>REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED=true</code></td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED: "true"</code></td>
         <td>E-Mail-Verwaltung für Benutzer (CRUD-Operationen für E-Mail-Adressen, Suche)</td>
       </tr>
       <tr class="even">
@@ -40,7 +40,7 @@
             <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
           <% end %>
         </td>
-        <td><code>REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED=true</code></td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED: "true"</code></td>
         <td>Kontakt-Zuweisung zu Tickets (Abfrage und Setzen von zugewiesenen Kontakten)</td>
       </tr>
       <tr class="odd">
@@ -55,7 +55,7 @@
             <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
           <% end %>
         </td>
-        <td><code>REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED=true</code></td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED: "true"</code></td>
         <td>Rückdatierung von Tickets und Kommentaren (Änderung von Erstellungs- und Änderungsdaten)</td>
       </tr>
     </tbody>
@@ -64,12 +64,10 @@
   <h3>Feature-Aktivierung</h3>
   <p>Um Features zu aktivieren, fügen Sie die entsprechenden Umgebungsvariablen in Ihr Docker Compose File ein:</p>
   
-  <pre style="background: #f5f5f5; padding: 10px; border: 1px solid #ddd; border-radius: 3px;">
-environment:
-  - REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED=true
-  - REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED=true
-  - REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED=true
-  </pre>
+  <pre style="background: #f5f5f5; padding: 10px; border: 1px solid #ddd; border-radius: 3px;">environment:
+  REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED: "true"
+  REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED: "true"
+  REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED: "true"</pre>
   
   <p><strong>Wichtig:</strong> Nach dem Ändern der Umgebungsvariablen muss der Container neu gestartet werden, damit die Änderungen wirksam werden.</p>
 </div>
