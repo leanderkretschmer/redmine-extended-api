@@ -1,6 +1,7 @@
 class AssignedContactsController < ApplicationController
   accept_api_auth :show, :update
 
+  before_action :check_feature_enabled
   before_action :find_issue
   before_action :authorize_global
 
@@ -62,6 +63,17 @@ class AssignedContactsController < ApplicationController
   end
 
   private
+
+  def check_feature_enabled
+    unless RedmineExtendedApiFeatureHelper.assigned_contacts_enabled?
+      respond_to do |format|
+        format.json {
+          render :json => {:error => 'Feature "Assigned Contacts" ist nicht aktiviert. Bitte aktivieren Sie es in den Plugin-Einstellungen.'}, :status => :forbidden
+        }
+      end
+      return false
+    end
+  end
 
   def find_issue
     @issue = Issue.find(params[:issue_id])

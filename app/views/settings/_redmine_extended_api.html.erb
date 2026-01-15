@@ -1,0 +1,76 @@
+<div class="box tabular settings">
+  <h3>Feature-Status</h3>
+  <p>Übersicht über den aktuellen Status aller Features. Alle Features sind standardmäßig deaktiviert.</p>
+  <p><strong>Hinweis:</strong> Features werden über Umgebungsvariablen im Docker Compose File aktiviert/deaktiviert.</p>
+  
+  <table class="list">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Status</th>
+        <th>Umgebungsvariable</th>
+        <th>Beschreibung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="odd">
+        <td><strong>User Mails</strong></td>
+        <td>
+          <% 
+            enabled = RedmineExtendedApiFeatureHelper.user_mails_enabled?
+          %>
+          <% if enabled %>
+            <span style="color: green; font-weight: bold;">✓ Aktiv</span>
+          <% else %>
+            <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
+          <% end %>
+        </td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED=true</code></td>
+        <td>E-Mail-Verwaltung für Benutzer (CRUD-Operationen für E-Mail-Adressen, Suche)</td>
+      </tr>
+      <tr class="even">
+        <td><strong>Assigned Contacts</strong></td>
+        <td>
+          <% 
+            enabled = RedmineExtendedApiFeatureHelper.assigned_contacts_enabled?
+          %>
+          <% if enabled %>
+            <span style="color: green; font-weight: bold;">✓ Aktiv</span>
+          <% else %>
+            <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
+          <% end %>
+        </td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED=true</code></td>
+        <td>Kontakt-Zuweisung zu Tickets (Abfrage und Setzen von zugewiesenen Kontakten)</td>
+      </tr>
+      <tr class="odd">
+        <td><strong>Backdating</strong></td>
+        <td>
+          <% 
+            enabled = RedmineExtendedApiFeatureHelper.backdating_enabled?
+          %>
+          <% if enabled %>
+            <span style="color: green; font-weight: bold;">✓ Aktiv</span>
+          <% else %>
+            <span style="color: red; font-weight: bold;">✗ Inaktiv</span>
+          <% end %>
+        </td>
+        <td><code>REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED=true</code></td>
+        <td>Rückdatierung von Tickets und Kommentaren (Änderung von Erstellungs- und Änderungsdaten)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Feature-Aktivierung</h3>
+  <p>Um Features zu aktivieren, fügen Sie die entsprechenden Umgebungsvariablen in Ihr Docker Compose File ein:</p>
+  
+  <pre style="background: #f5f5f5; padding: 10px; border: 1px solid #ddd; border-radius: 3px;">
+environment:
+  - REDMINE_EXTENDED_API_FEATURE_USER_MAILS_ENABLED=true
+  - REDMINE_EXTENDED_API_FEATURE_ASSIGNED_CONTACTS_ENABLED=true
+  - REDMINE_EXTENDED_API_FEATURE_BACKDATING_ENABLED=true
+  </pre>
+  
+  <p><strong>Wichtig:</strong> Nach dem Ändern der Umgebungsvariablen muss der Container neu gestartet werden, damit die Änderungen wirksam werden.</p>
+</div>
+
